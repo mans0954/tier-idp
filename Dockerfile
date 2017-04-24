@@ -1,5 +1,9 @@
 FROM   centos:7
-MAINTAINER Mark McCahill "mark.mccahill@duke.edu"
+MAINTAINER Christopher Hoskin "christopher.hoskin@gmail.com"
+# Based on https://github.com/Internet2/tier-idp/
+# Original Copyright and License unknown
+# Modifications Copyright Christopher Hoskin
+# Original Maintainer Mark McCahill "mark.mccahill@duke.edu"
 
 USER root
 

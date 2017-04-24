@@ -1,5 +1,18 @@
 # Shibboleth IDP
 
+Unofficial Docker container for the Shibboleth IdP.
+
+For official information about Shibboleth, please see:
+
+http://shibboleth.net/
+
+Shibboleth is Copyright University Corporation for Advanced Internet Development, Inc. (Internet2) and distributed under the Apache 2.0 license.
+
+The files in this project is based on https://github.com/Internet2/tier-idp/
+Original Copyright and License unknown, Modifications Copyright Christopher Hoskin. Original Maintainer Mark McCahill "mark.mccahill@duke.edu"
+
+THIS CONTAINER IS PURELY FOR DEMONSTRATION PURPOSES ON YOUR LOCALHOST. IT IS NOT PRODUCTION READY. 
+
 ## Building
 
 
@@ -79,3 +92,5 @@ last reload attempt: 2016-04-07T21:53:58Z
 [root@c6bb80bf3ce2 /]# 
 
 ```
+
+
