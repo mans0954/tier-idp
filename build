@@ -1,1 +1,1 @@
-sudo docker build -t="shibboleth-idp" .
+docker build -t="shibboleth-idp" .
