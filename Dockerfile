@@ -42,14 +42,14 @@ RUN yum -y update &&  \
 RUN set -e ; \
     mkdir /usr/local/dist ; \
     cd /usr/local/dist ; \
-    wget http://shibboleth.net/downloads/identity-provider/latest/shibboleth-identity-provider-3.2.1.tar.gz ; \
-    wget http://shibboleth.net/downloads/identity-provider/latest/shibboleth-identity-provider-3.2.1.tar.gz.asc ; \
-    wget http://shibboleth.net/downloads/identity-provider/latest/shibboleth-identity-provider-3.2.1.tar.gz.sha256 ; \
+    wget http://shibboleth.net/downloads/identity-provider/3.3.1/shibboleth-identity-provider-3.3.1.tar.gz ; \
+    wget http://shibboleth.net/downloads/identity-provider/3.3.1/shibboleth-identity-provider-3.3.1.tar.gz.asc ; \
+    wget http://shibboleth.net/downloads/identity-provider/3.3.1/shibboleth-identity-provider-3.3.1.tar.gz.sha256 ; \
     wget https://shibboleth.net/downloads/PGP_KEYS ; \
     gpg --import PGP_KEYS ; \
-    sha256sum --check shibboleth-identity-provider-3.2.1.tar.gz.sha256 ; \
-    gpg shibboleth-identity-provider-3.2.1.tar.gz.asc ; \
-    tar -xvzf shibboleth-identity-provider-3.2.1.tar.gz
+    sha256sum --check shibboleth-identity-provider-3.3.1.tar.gz.sha256 ; \
+    gpg shibboleth-identity-provider-3.3.1.tar.gz.asc ; \
+    tar -xvzf shibboleth-identity-provider-3.3.1.tar.gz
 
 RUN yum -y update &&  \
     yum -y install \
@@ -68,7 +68,7 @@ RUN export JAVA_HOME=/usr/java/latest ; \
     export HOST=idp.$SCOPE ; \
     export ENTITYID=https://$HOST/idp/shibboleth ;  \
     cd /usr/local/dist ;  \
-    export DIST=/usr/local/dist/shibboleth-identity-provider-3.2.1 ; \
+    export DIST=/usr/local/dist/shibboleth-identity-provider-3.3.1 ; \
     export IDP_HOME=/opt/shibboleth-idp ; \
     echo \# Properties controlling the installation of the Shibboleth IdP>$DIST/idp.install.properties ; \
     export SFILE=$DIST/idp.merge.properties ; \
