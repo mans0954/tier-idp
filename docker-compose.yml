@@ -5,10 +5,10 @@ services:
     build: .
 
   test-sp:
-    image: unicorn/shibboleth-sp
-
-
+    image: unicon/shibboleth-sp
+    container_name: test-sp
     volumes:
-      - ./test-sp:/etc/shibboleth
+      - ./test-sp/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml
+      - ./test-sp/sp.conf:/etc/httpd/conf.d/sp.conf
 
 
