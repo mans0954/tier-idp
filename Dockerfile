@@ -64,7 +64,7 @@ ADD ./configs /build-configs
 RUN export JAVA_HOME=/usr/java/latest ; \
     export KEYPASS=changeit ; \
     export SEALPASS=changeit ; \
-    export SCOPE=testbed.tier.internet2.edu ; \
+    export SCOPE=docker ; \
     export HOST=idp.$SCOPE ; \
     export ENTITYID=https://$HOST/idp/shibboleth ;  \
     cd /usr/local/dist ;  \
