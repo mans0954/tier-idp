@@ -41,7 +41,7 @@
             (Set discoveryProtocol to "WAYF" for legacy Shibboleth WAYF support.)
             You can also override entityID on /Login query string, or in RequestMap/htaccess.
             -->
-            <SSO entityID="https://idptestbed/idp/shibboleth">
+            <SSO entityID="https://tier-idp.docker/idp/shibboleth">
               SAML2 SAML1
             </SSO>
 
@@ -87,6 +87,7 @@
         <!--
         <MetadataProvider type="XML" validate="true" file="partner-metadata.xml"/>
         -->
+	<MetadataProvider type="XML" validate="false" file="metadata/idp-metadata.xml"/>
         
         <MetadataProvider type="XML" validate="true" file="idp-metadata.xml"/>
 

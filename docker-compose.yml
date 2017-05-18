@@ -3,6 +3,21 @@ version: "3.1"
 services:
   tier-idp:
     build: .
+    volumes:
+      - metadata:/opt/shibboleth-idp/metadata/
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+    container_name: tier-idp
+    stop_signal: RTMIN+3
+    environment:
+      - container=docker
+    tmpfs:
+      - /run
+      - /tmp
+    cap_add:
+      - SYS_ADMIN
+    expose:
+      - "8080"
+      - "8443"
 
   test-sp:
     image: unicon/shibboleth-sp
@@ -10,5 +25,7 @@ services:
     volumes:
       - ./test-sp/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml
       - ./test-sp/sp.conf:/etc/httpd/conf.d/sp.conf
+      - metadata:/etc/shibboleth/metadata
 
-
+volumes:
+  metadata:

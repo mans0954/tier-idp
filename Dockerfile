@@ -65,7 +65,7 @@ RUN export JAVA_HOME=/usr/java/latest ; \
     export KEYPASS=changeit ; \
     export SEALPASS=changeit ; \
     export SCOPE=docker ; \
-    export HOST=idp.$SCOPE ; \
+    export HOST=tier-idp.$SCOPE ; \
     export ENTITYID=https://$HOST/idp/shibboleth ;  \
     cd /usr/local/dist ;  \
     export DIST=/usr/local/dist/shibboleth-identity-provider-3.3.1 ; \
