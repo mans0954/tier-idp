@@ -66,7 +66,7 @@ RUN export JAVA_HOME=/usr/java/latest ; \
     export SEALPASS=changeit ; \
     export SCOPE=docker ; \
     export HOST=tier-idp.$SCOPE ; \
-    export ENTITYID=https://$HOST/idp/shibboleth ;  \
+    export ENTITYID=http://$HOST:8080/idp/shibboleth ;  \
     cd /usr/local/dist ;  \
     export DIST=/usr/local/dist/shibboleth-identity-provider-3.3.1 ; \
     export IDP_HOME=/opt/shibboleth-idp ; \
@@ -122,7 +122,9 @@ RUN systemctl enable tomcat.service
 
 RUN sed -i 's/https:\/\/tier-idp.docker\//http:\/\/tier-idp.docker:8080\//' /opt/shibboleth-idp/metadata/idp-metadata.xml
 
-COPY relying-party.xml /opt/shibboleth-idp/conf/relying-party.xml 
+COPY relying-party.xml /opt/shibboleth-idp/conf/relying-party.xml
+COPY password-authn-config.xml /opt/shibboleth-idp/conf/authn/password-authn-config.xml
+COPY kerberos/krb5.conf /etc/krb5.conf
 
 EXPOSE 8080
 CMD ["/usr/sbin/init"]

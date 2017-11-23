@@ -18,14 +18,25 @@ services:
     expose:
       - "8080"
       - "8443"
+    networks:
+      - example
+
+  idp-kerberos:
+    build: kerberos/
+    container_name: idp-kdc
+    networks:
+      - example
 
   test-sp:
     image: unicon/shibboleth-sp
     container_name: test-sp
     volumes:
       - ./test-sp/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml
-      - ./test-sp/sp.conf:/etc/httpd/conf.d/sp.conf
       - metadata:/etc/shibboleth/metadata
+      - ./index.html:/var/www/html/secure/index.html
 
 volumes:
   metadata:
+
+networks:
+  example:

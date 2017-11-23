@@ -18,17 +18,31 @@ In particular, I have done several things which would be completely inappropriat
 * Used http rather than https endpoints
 * Allowed the IdP to respond to unverified relying parties
 * Used weak default passwords
+* Not using a service principal for communication with the KDC
+* Using cookieProps="http" rather than cookieProps="https"
 
+## Components
+
+* Shibboleth SP (using the Unicorn image https://github.com/Unicon/shibboleth-sp-dockerized)
+* Shibboleth IdP (based on https://github.com/Internet2/tier-idp)
+* Keberos KDC
 
 ## Building
 
+```
+docker-compose build
+```
 
-Run the build script:
+## Running
 
 ```
-cp Dockerfile.OpenJDK Dockerfile
-./build
+docker-compose up
 ```
+
+## Testing
+
+Browse to http://test-sp.docker/secure/ and log in with the username `user1` and password `password1`.
+
 
 ### How to verify the IDP from inside the container
 
