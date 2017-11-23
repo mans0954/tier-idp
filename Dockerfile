@@ -120,5 +120,9 @@ VOLUME [ "/sys/fs/cgroup" ]
 
 RUN systemctl enable tomcat.service
 
+RUN sed -i 's/https:\/\/tier-idp.docker\//http:\/\/tier-idp.docker:8080\//' /opt/shibboleth-idp/metadata/idp-metadata.xml
+
+COPY relying-party.xml /opt/shibboleth-idp/conf/relying-party.xml 
+
 EXPOSE 8080
 CMD ["/usr/sbin/init"]

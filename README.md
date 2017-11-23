@@ -1,6 +1,6 @@
 # Shibboleth IDP
 
-Unofficial Docker container for the Shibboleth IdP.
+Unofficial Docker container for the Shibboleth IdP. Derived from https://github.com/Internet2/tier-idp
 
 For official information about Shibboleth, please see:
 
@@ -11,7 +11,14 @@ Shibboleth is Copyright University Corporation for Advanced Internet Development
 The files in this project is based on https://github.com/Internet2/tier-idp/
 Original Copyright and License unknown, Modifications Copyright Christopher Hoskin. Original Maintainer Mark McCahill "mark.mccahill@duke.edu"
 
-THIS CONTAINER IS PURELY FOR DEMONSTRATION PURPOSES ON YOUR LOCALHOST. IT IS NOT PRODUCTION READY. 
+THIS CONTAINER IS PURELY FOR DEMONSTRATION PURPOSES ON YOUR LOCALHOST. IT IS NOT PRODUCTION READY.
+
+In particular, I have done several things which would be completely inappropriate for anything which could be accessed by third parites. A non-exhaustive list is:
+
+* Used http rather than https endpoints
+* Allowed the IdP to respond to unverified relying parties
+* Used weak default passwords
+
 
 ## Building
 
