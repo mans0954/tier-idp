@@ -1,4 +1,4 @@
-FROM   centos:7
+FROM   tomcat
 MAINTAINER Christopher Hoskin "christopher.hoskin@gmail.com"
 # Based on https://github.com/Internet2/tier-idp/
 # Original Copyright and License unknown
@@ -6,35 +6,12 @@ MAINTAINER Christopher Hoskin "christopher.hoskin@gmail.com"
 # Original Maintainer Mark McCahill "mark.mccahill@duke.edu"
 
 USER root
+ENV version=3.3.1
 
-RUN yum -y update &&  \
-    yum -y install \
-             wget \
-             unzip; \
-    yum clean all
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y wget unzip
 
 RUN cd /opt
-
-################## start OpenJDK ###################### 
-#
-RUN yum -y update &&  \
-    yum -y install \ 
-             java-1.8.0-openjdk.x86_64  \
-             java-1.8.0-openjdk-devel.x86_64 ;  \
-    mkdir /usr/java ; \
-    ln -s /etc/alternatives/java_sdk_1.8.0_openjdk /usr/java/jdk1.8.0_77 ; \
-    ln -s /usr/java/jdk1.8.0_77 /usr/java/latest ; \
-    yum clean all
-#
-################## end OpenJDK ################## 
-
-#
-# tomcat
-#
-RUN yum -y update &&  \
-    yum -y install \
-             tomcat ; \
-    yum clean all
 
 #
 # Shibboleth IDP
@@ -42,33 +19,28 @@ RUN yum -y update &&  \
 RUN set -e ; \
     mkdir /usr/local/dist ; \
     cd /usr/local/dist ; \
-    wget http://shibboleth.net/downloads/identity-provider/3.3.1/shibboleth-identity-provider-3.3.1.tar.gz ; \
-    wget http://shibboleth.net/downloads/identity-provider/3.3.1/shibboleth-identity-provider-3.3.1.tar.gz.asc ; \
-    wget http://shibboleth.net/downloads/identity-provider/3.3.1/shibboleth-identity-provider-3.3.1.tar.gz.sha256 ; \
+    wget http://shibboleth.net/downloads/identity-provider/${version}/shibboleth-identity-provider-${version}.tar.gz ; \
+    wget http://shibboleth.net/downloads/identity-provider/${version}/shibboleth-identity-provider-${version}.tar.gz.asc ; \
+    wget http://shibboleth.net/downloads/identity-provider/${version}/shibboleth-identity-provider-${version}.tar.gz.sha256 ; \
     wget https://shibboleth.net/downloads/PGP_KEYS ; \
     gpg --import PGP_KEYS ; \
-    sha256sum --check shibboleth-identity-provider-3.3.1.tar.gz.sha256 ; \
-    gpg shibboleth-identity-provider-3.3.1.tar.gz.asc ; \
-    tar -xvzf shibboleth-identity-provider-3.3.1.tar.gz
-
-RUN yum -y update &&  \
-    yum -y install \
-             openssl ; \
-    yum clean all
+    sha256sum --check shibboleth-identity-provider-${version}.tar.gz.sha256 ; \
+    gpg shibboleth-identity-provider-${version}.tar.gz.asc ; \
+    tar -xvzf shibboleth-identity-provider-${version}.tar.gz
 
 ADD ./configs /build-configs
 
 #
 # Install shibboleth IDP
 #
-RUN export JAVA_HOME=/usr/java/latest ; \
+RUN export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 ; \
     export KEYPASS=changeit ; \
     export SEALPASS=changeit ; \
     export SCOPE=docker ; \
     export HOST=tier-idp.$SCOPE ; \
     export ENTITYID=http://$HOST:8080/idp/shibboleth ;  \
     cd /usr/local/dist ;  \
-    export DIST=/usr/local/dist/shibboleth-identity-provider-3.3.1 ; \
+    export DIST=/usr/local/dist/shibboleth-identity-provider-${version} ; \
     export IDP_HOME=/opt/shibboleth-idp ; \
     echo \# Properties controlling the installation of the Shibboleth IdP>$DIST/idp.install.properties ; \
     export SFILE=$DIST/idp.merge.properties ; \
@@ -88,7 +60,7 @@ RUN export JAVA_HOME=/usr/java/latest ; \
        -Didp.noprompt=true 
 
 RUN IDP_HOME=/opt/shibboleth-idp ; \
-    chgrp -R tomcat $IDP_HOME ; \
+    chgrp -R root $IDP_HOME ; \
     chmod -R g+r $IDP_HOME ; \
     chmod g+w $IDP_HOME/logs ; \
     chmod g+s $IDP_HOME/logs
@@ -102,23 +74,8 @@ RUN wget https://build.shibboleth.net/nexus/service/local/repositories/thirdpart
 #
 # Deploy to Tomcat
 #
-RUN cp /build-configs/idp.xml /etc/tomcat/Catalina/localhost/
-
-#
-# things we need assuming we end up running systemd
-#
-ENV container docker
-RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-rm -f /lib/systemd/system/multi-user.target.wants/*;\
-rm -f /etc/systemd/system/*.wants/*;\
-rm -f /lib/systemd/system/local-fs.target.wants/*; \
-rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-rm -f /lib/systemd/system/basic.target.wants/*;\
-rm -f /lib/systemd/system/anaconda.target.wants/*;
-VOLUME [ "/sys/fs/cgroup" ]
-
-RUN systemctl enable tomcat.service
+RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost/
+RUN cp /build-configs/idp.xml /usr/local/tomcat/conf/Catalina/localhost/
 
 RUN sed -i 's/https:\/\/tier-idp.docker\//http:\/\/tier-idp.docker:8080\//' /opt/shibboleth-idp/metadata/idp-metadata.xml
 
@@ -127,4 +84,3 @@ COPY password-authn-config.xml /opt/shibboleth-idp/conf/authn/password-authn-con
 COPY kerberos/krb5.conf /etc/krb5.conf
 
 EXPOSE 8080
-CMD ["/usr/sbin/init"]
